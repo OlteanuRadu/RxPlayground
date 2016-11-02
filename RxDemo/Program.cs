@@ -25,9 +25,13 @@ namespace RxDemo
             //                Console.ResetColor();
             //            }, () => Console.WriteLine("Done ... "));
 
+            var x = GetNumbers(2000, 100, 1);
+            var y = GetNumbers(10000, 100, 2);
+            var z = GetNumbers(20000, 100, 3);
+            var t = GetNumbers(30000, 100, 4);
 
             Observable.When(
-                 GetNumbers(2000, 3).And(GetNumbers(6000, 100)).And(GetNumbers(10000, 100)).And(GetNumbers(12000, 100)).Then(
+                 x.And(y).And(z).And(t).Then(
                  (first, second, third, forth) => new { First = first, Second = second, Thirt = third, Forth = forth }))
                  .Subscribe(_ =>
                  {
@@ -52,13 +56,12 @@ namespace RxDemo
 
             Console.ReadLine();
         }
-
-        static IObservable<long> GetNumbers(int dataFrequency, int length)
+        static IObservable<long> GetNumbers(int dataFrequency, int length, int streamId)
         {
             var res = Observable.Interval(TimeSpan.FromMilliseconds(dataFrequency)).Do(_ =>
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"Adding {_} to the stream ... from Thread Id {Thread.CurrentThread.ManagedThreadId}");
+                Console.WriteLine($"Adding {_} to the stream {streamId}... from Thread Id {Thread.CurrentThread.ManagedThreadId}");
                 Console.ResetColor();
             }).Take(length);
 
